@@ -452,12 +452,6 @@ Bu çalışmada kullanılan temel yöntem ve veri kaynakları:
 
 ---
 
-## 📄 Lisans
-
-Bu proje [MIT Lisansı](LICENSE) kapsamında dağıtılmaktadır.
-
----
-
 ## 📬 İletişim
 
 Sorular ve öneriler için bir **Issue** açabilir ya da doğrudan iletişime geçebilirsiniz.
