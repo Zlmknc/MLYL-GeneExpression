@@ -1,30 +1,12 @@
-Veri Hazırlama ve Etiketleme:
-Gerekli kütüphaneleri (pandas, sklearn, xgboost vb.) içe aktarır.  
-spellman_periodic_genes.txt dosyasından 800 periyodik geni yükler.  
-Spellman.csv veri setini okur.  
-Verideki gen isimlerini referans listeyle karşılaştırarak periyodik olanları 1, olmayanları 0 olarak işaretleyen bir label sütunu ekler.  
-Sonucu Spellman_with_labels.csv olarak kaydeder.  
+# Yeast Cell Cycle Periodic Gene Classifier
 
-Temel Sınıflandırma Denemeleri: Zaman serisi verilerini özellik (X) ve etiket (y) olarak ayırır. Özellik Çıkarımı: Ortalama, standart sapma gibi istatistiklerin yanı sıra Fourier Dönüşümü (FFT) kullanarak frekans tabanlı özellikler üretir. Random Forest, XGBoost, SVM ve Lojistik Regresyon modellerini eğitir. Her modelin performansını (Accuracy, F1-Score, Confusion Matrix) ekrana yazdırır.
-
-İyileştirilmiş Random Forest ve SMOTE:  
-Verideki sınıf dengesizliğini gidermek için SMOTE algoritmasıyla sentetik veri üretir.  
-Özellik çıkarımına Otorelasyon (Autocorrelation) ekler. Random Forest modelini hiperparametrelerle optimize eder.  
-Modelin yakalama oranını (recall) artırmak için karar eşiğini (threshold) 0.35'e çeker.
-
-Gelişmiş Ensemble Model ve Sinyal İşleme:  
-İleri Seviye Özellikler: FFT detaylandırılır, teppe noktası (peak) sayısı hesaplanır ve en güçlü özellik olarak sinüzoidal eğri uydurma (Curve Fitting) uygulanır. SMOTE ve ADASYN gibi farklı dengeleme tekniklerini dener. Random Forest ve XGBoost modellerini birleştiren bir Voting Classifier (Ensemble) oluşturur. En iyi sonucu veren eşik değerini bulmak için 0.30 ile 0.45 arasında bir tarama yapar. Final modelini spellman_periodic_classifier_ensemble.pkl olarak kaydeder.
-
-
-# 🧬 Yeast Cell Cycle Periodic Gene Classifier
-
-**Saccharomyces cerevisiae** genlerinin hücre döngüsü boyunca periyodik ifade gösterip göstermediğini makine öğrenmesi ile tahmin eden çok aşamalı sınıflandırma çerçevesi.
+**Saccharomyces cerevisiae** genlerinin hücre döngüsü boyunca periyodik ifade gösterip göstermediğini makine öğrenmesi ile tahmin eden çok aşamalı sınıflandırma çalışmasıdır.
 
 > Temel veri kaynağı: Spellman ve ark. (1998) — *Molecular Biology of the Cell*, 9(12), 3273–3297.
 
 ---
 
-## 📋 İçindekiler
+## İçindekiler
 
 - [Proje Hakkında](#-proje-hakkında)
 - [Klasör Yapısı](#-klasör-yapısı)
@@ -41,14 +23,14 @@ Gelişmiş Ensemble Model ve Sinyal İşleme:
 
 ---
 
-## 🔬 Proje Hakkında
+## Proje 
 
-Bu proje, maya (*S. cerevisiae*) hücre döngüsü zaman serisi gen ifade verisinden periyodik genleri makine öğrenmesiyle sınıflandırmayı amaçlamaktadır. Dört aşamalı bir pipeline sunulmaktadır:
+Proje, maya (*S. cerevisiae*) hücre döngüsü zaman serisi gen ifade verisinden periyodik genleri makine öğrenmesiyle sınıflandırmayı amaçlamaktadır. Dört aşamalı bir pipeline uygulanmıştır:
 
 | Aşama | Açıklama |
 |-------|----------|
 | **1** | Veri hazırlama ve ikili etiketleme (periyodik / periyodik olmayan) |
-| **2** | Temel ML modelleri ile kıyas denemeleri |
+| **2** | Temel ML modelleri ile karşılaştırma denemeleri |
 | **3** | SMOTE dengeleme + optimize edilmiş Random Forest |
 | **4** | SMOTETomek + Ensemble (Voting Classifier) + eşik optimizasyonu |
 
@@ -61,7 +43,7 @@ Bu proje, maya (*S. cerevisiae*) hücre döngüsü zaman serisi gen ifade verisi
 
 ---
 
-## 📁 Klasör Yapısı
+## 📁 Projenin Klasör Yapısı
 
 ```
 spellman-cell-cycle-ml/
@@ -93,13 +75,12 @@ spellman-cell-cycle-ml/
 │   └── metrics_summary.csv                    # Tüm modellerin metrik özeti
 │
 ├── requirements.txt
-├── environment.yml
 └── README.md
 ```
 
 ---
 
-## ⚙️ Kurulum
+## Kurulum
 
 ### 1. Depoyu Klonlayın
 
@@ -131,7 +112,7 @@ python -c "import sklearn, xgboost, lightgbm, catboost, imblearn; print('Tüm ba
 
 ---
 
-## 📊 Veri Setleri
+## Veri Setleri
 
 ### Spellman.csv
 
@@ -156,7 +137,7 @@ Periyodik (1)      :   800  (~14.4 %)
 Periyodik olmayan (0): ~4750  (~85.6 %)
 ```
 
-> ⚠️ Belirgin sınıf dengesizliği — dengeleme stratejileri zorunludur.
+> Belirgin sınıf dengesizliği — dengeleme stratejileri zorunludur.
 
 ### Eksik Değer Yönetimi
 
@@ -165,7 +146,7 @@ Periyodik olmayan (0): ~4750  (~85.6 %)
 
 ---
 
-## 🚀 Kullanım
+## Kullanım
 
 ### Adım 1 — Veri Hazırlama
 
@@ -249,7 +230,7 @@ print(f"Periyodik olasılığı: {prob:.3f} → {'Periyodik ✓' if pred else 'P
 
 ---
 
-## 🔧 Metodoloji
+## Metodoloji
 
 ### Özellik Mühendisliği (17 özellik)
 
@@ -284,21 +265,9 @@ Uydurma: `scipy.optimize.curve_fit` — başarısız yakınsama durumunda tüm p
 
 ---
 
-## 🤖 Modeller ve Sonuçlar
+## Modeller ve Sonuçlar
 
-### Temel Model Karşılaştırması
-
-| Model | Accuracy | F1-Macro | ROC-AUC | PR-AUC |
-|-------|----------|----------|---------|--------|
-| Random Forest | — | — | — | — |
-| XGBoost | — | — | — | — |
-| SVM (RBF) | — | — | — | — |
-| Lojistik Regresyon | — | — | — | — |
-| k-NN (k=5) | — | — | — | — |
-| LightGBM | — | — | — | — |
-| CatBoost | — | — | — | — |
-
-> 📌 Tablo, çalışma tamamlandıktan sonra `results/metrics_summary.csv` dosyasından doldurulacaktır.
+> Tablo, çalışma tamamlandıktan sonra `results/metrics_summary.csv` dosyasından doldurulacaktır.
 
 ### Final Ensemble Modeli (Soft Voting)
 
@@ -316,7 +285,7 @@ Eşik      : [threshold_scan ile belirlendi]
 
 ---
 
-## 📈 Değerlendirme Metrikleri
+## Kullanılan Değerlendirme Metrikleri
 
 Sınıf dengesizliği (%14.4 pozitif) nedeniyle birden fazla metrik raporlanmaktadır:
 
@@ -335,7 +304,7 @@ Sınıf dengesizliği (%14.4 pozitif) nedeniyle birden fazla metrik raporlanmakt
 
 ---
 
-## 🔁 Tekrarlanabilirlik
+## Tekrarlanabilirlik
 
 Tüm stokastik süreçlerde global rastgele tohum değeri **42** olarak sabitlenmiştir:
 
@@ -362,7 +331,7 @@ np.random.seed(42)
 
 ---
 
-## 📦 Bağımlılıklar
+## Bağımlılıklar
 
 `requirements.txt` içeriği:
 
